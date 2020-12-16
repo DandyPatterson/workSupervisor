@@ -108,10 +108,21 @@ while $running; do
         printf "Fix your posture!"
     fi
 
+    # Alert if we are still fucking around with 15 minutes remaining
+    if [ $(($minutes % 60)) == 45 ] && [[ "$water" = 0 ] || [ "$brain" = 0 ] || [ "$stretch" = 0 ]]
+    then 
+        echo -ne '\007'
+        echo -ne '\007'
+        echo -ne '\007'
+        printf "Only 15 minutes left to get stuff done!"
+        printf "The more you do it the easier it gets!"
+    fi
+
     # Listen for userinput 
     read -t 60 -n 1 userInput
     if [ ! -z $userInput ]
     then
+        ((minutes=minutes-1))
         # tell supervisor we drank water stretched or worked our brain
         if [ $userInput == 'w' ] 
         then 
