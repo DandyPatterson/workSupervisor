@@ -109,13 +109,16 @@ while $running; do
     fi
 
     # Alert if we are still fucking around with 15 minutes remaining
-    if [ $(($minutes % 60)) == 45 ] && [[ "$water" = 0 ] || [ "$brain" = 0 ] || [ "$stretch" = 0 ]]
+    if [ $(($minutes % 60)) == 45 ] 
     then 
-        echo -ne '\007'
-        echo -ne '\007'
-        echo -ne '\007'
-        printf "Only 15 minutes left to get stuff done!"
-        printf "The more you do it the easier it gets!"
+        if [ $water == 0 ] || [ $brain == 0 ] || [ $stretch == 0 ]
+        then 
+            echo -ne '\007'
+            echo -ne '\007'
+            echo -ne '\007'
+            printf "Only 15 minutes left to get stuff done!"
+            printf "The more you do it the easier it gets!"
+        fi
     fi
 
     # Listen for userinput 
