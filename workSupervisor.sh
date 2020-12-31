@@ -105,7 +105,7 @@ while $running; do
     if [ $(($minutes % 15)) == 0 ]
     then 
         echo -ne '\007'
-        printf "Fix your posture!"
+        printf "Fix your posture and check you breathing!"
     fi
 
     # Alert if we are still fucking around with 15 minutes remaining
