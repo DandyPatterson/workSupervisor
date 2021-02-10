@@ -1,19 +1,23 @@
 
 
 Every 15 Minutes Check posture and breathing
-    Posture 
+Posture
+    Standing
+        both feet flat at shoulders width
+        not resting on table
+        straight back
+    Sitting
         hips even or just above knees
         feet flat on ground
         Arms length from screen
         relax shoulders and back
-        sit straight
-        
+        straight back
+Breathing
     Inhale 7 seconds and exhale 7 seconds with full diaphragm and stomache
 
 
 Every Hour
     Hydration: Drink 300ml water
-    Blood Flow: Do 5 pullups/5 pushups
-    Posture: Stand for 2 minutes walking and stretching arms and legs
+    Blood Flow: Walk around do 4 pullups & 4 pushups
 
-2 Glasses of water when waking
+Work Supervisor

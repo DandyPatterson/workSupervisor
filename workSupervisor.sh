@@ -3,13 +3,13 @@ ticks=("✖" "✔")
 printf ticks[true]
 supervisorLogString=""
 stretch=0
-water=0
-brain=0
+water=0 
+
 stretchTotal=0
 waterTotal=0
-brainTotal=0
 bold=$(tput bold)
 normal=$(tput sgr0)
+
 minutes=0
 userInput=""
 running=true
@@ -30,13 +30,6 @@ function endSupervisor {
         printf "\nStretch: ${stretchTotal}/$attempts times. Pass!"
     else
         printf "\nStretch: ${stretchTotal}/$attempts times. Fail!"
-    fi
-
-    if [ $((100*$brainTotal/$attempts)) -gt 80  ]
-    then
-        printf "\nBrain: ${brainTotal}/$attempts times. Pass!"
-    else
-        printf "\nBrain: ${brainTotal}/$attempts times. Fail!"
     fi
 
     if [ $((100*$waterTotal/$attempts)) -gt 80  ]
@@ -60,10 +53,6 @@ while $running; do
     if [ $(($minutes / 60)) -gt 0 ] 
     then
         printf "It's been $(($minutes / 60)) Hours: "
-        if [ "$brain" = 0 ]
-        then 
-            printf " Work your [B]rain; "
-        fi
         if [ "$stretch" = 0 ]
         then 
             printf " [S]tretch; "
@@ -79,12 +68,8 @@ while $running; do
     if [ $(($minutes % 60)) == 0 ] && [ $(($minutes / 60)) -gt 1 ]
     then
         echo -ne '\007'
-        supervisorLogString="${supervisorLogString} You completed $((($minutes / 60) - 1)) Hours: \t[${ticks[$water]}]Water \t[${ticks[$stretch]}]Stretch \t[${ticks[$brain]}]Brain \n"
+        supervisorLogString="${supervisorLogString} You completed $((($minutes / 60) - 1)) Hours: \t[${ticks[$water]}]Water \t[${ticks[$stretch]}]Stretch \n"
         # Store the previous hour into file and add to string 
-        if [ "$brain" = 1 ]
-        then 
-            ((brainTotal++))
-        fi
         if [ "$stretch" = 1 ]
         then 
             ((stretchTotal++))
@@ -96,30 +81,29 @@ while $running; do
         # Reset the tasks at hand!
         stretch=0   
         water=0
-        brain=0
     fi
 
     # Minute logging
     printf "You have been working for a total of $minutes Minutes.\n"
     # Check if its been 15 minutes of running
-    if [ $(($minutes % 15)) == 0 ]
+    if [ $(($minutes % 15)) == 0 ] && [ $(($minutes)) -gt 60]
     then 
         echo -ne '\007'
         printf "Fix your posture and check you breathing!"
     fi
 
     # Alert if we are still fucking around with 15 minutes remaining
-    if [ $(($minutes % 60)) == 45 ] 
-    then 
-        if [ $water == 0 ] || [ $brain == 0 ] || [ $stretch == 0 ]
-        then 
-            echo -ne '\007'
-            echo -ne '\007'
-            echo -ne '\007'
-            printf "Only 15 minutes left to get stuff done!"
-            printf "The more you do it the easier it gets!"
-        fi
-    fi
+    # if [ $(($minutes % 60)) == 45 ] 
+    # then 
+    #     if [ $water == 0 ] || [ $stretch == 0 ]
+    #     then 
+    #         echo -ne '\007'
+    #         echo -ne '\007'
+    #         echo -ne '\007'
+    #         printf "Only 15 minutes left to get stuff done!"
+    #         printf "The more you do it the easier it gets!"
+    #     fi
+    # fi
 
     # Listen for userinput 
     read -t 60 -n 1 userInput
@@ -133,9 +117,6 @@ while $running; do
         elif [ $userInput == 's' ] 
         then 
             stretch=1
-        elif [ $userInput == 'b' ] 
-        then 
-            brain=1
         fi
 
         # BLOCKING RESPONSES
@@ -147,10 +128,6 @@ while $running; do
         # End the supervisor when clicking f 
         if [ $userInput == 'f' ] 
         then 
-            if [ "$brain" = 1 ]
-            then 
-                ((brainTotal++))
-            fi
             if [ "$stretch" = 1 ]
             then 
                 ((stretchTotal++))
