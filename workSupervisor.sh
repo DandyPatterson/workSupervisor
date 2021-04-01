@@ -60,5 +60,5 @@ Break time is over whats our next task:
         printf "
 Lets do it!"
     fi
-    read -t 1
+    read -t 60
 done
