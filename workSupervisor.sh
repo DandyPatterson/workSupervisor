@@ -1,15 +1,5 @@
-#!/bin/bash
-ticks=("✖" "✔")
-supervisorLogString=""
-stretch=0
-water=0 
-stretchTotal=0
-waterTotal=0
-bold=$(tput bold)
-normal=$(tput sgr0)
+
 minutes=0
-userInput=""
-task=""
 running=false
 welcome="
 Hi, Welcome to work supervisor.
@@ -63,7 +53,7 @@ It's been ${minutes} minutes. Time for a break! Get some Water and Stretch \n"
         printf "
 Break time is over whats our next task: 
 "
-        read task
+        read
     fi
     if [ $(($minutes % 60)) ==  1 ]
     then 
