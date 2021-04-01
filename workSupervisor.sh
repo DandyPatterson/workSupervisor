@@ -1,142 +1,74 @@
 #!/bin/bash
 ticks=("✖" "✔")
-printf ticks[true]
 supervisorLogString=""
 stretch=0
 water=0 
-
 stretchTotal=0
 waterTotal=0
 bold=$(tput bold)
 normal=$(tput sgr0)
-
 minutes=0
 userInput=""
+task=""
+running=false
+welcome="
+Hi, Welcome to work supervisor.
+We will assign a task and work on it for 45 minutes checking posture and breath during then taking a 15 minute break to get up drink and stretch. After repeating 4 times we will take at least an hour break before starting again.
+
+Get water, get coffee, smash one out in the bathroom, put away phone, close all tabs and get ready to focus."
+
+clear
+printf "$welcome"
+printf "
+
+[Press any key to begin]"
+read -n 1
+clear
+printf "$welcome"
+printf "
+
+Assign the first task: "
+read
 running=true
-welcome="\nWelcome to work supervisor you can ${bold}[P]${normal}ause or ${bold}[F]${normal}inish at anytime.\n"
-
-# Pause the supervisor
-function pauseSupervisor {
-    printf "\nWe are paused type any key to continue work supervisor"
-    read -n 1
-}
-
-# End the supervisor
-function endSupervisor {
-    attempts=$(($minutes / 60))
-
-    if [ $((100*$stretchTotal/$attempts)) -gt 80  ]
-    then
-        printf "\nStretch: ${stretchTotal}/$attempts times. Pass!"
-    else
-        printf "\nStretch: ${stretchTotal}/$attempts times. Fail!"
-    fi
-
-    if [ $((100*$waterTotal/$attempts)) -gt 80  ]
-    then
-        printf "\nWater: ${waterTotal}/$attempts times. Pass!"
-    else
-        printf "\nWater: ${waterTotal}/$attempts times. Fail!"
-    fi
-    running=false
-}
-
 
 while $running; do
-    clear
-    printf "$welcome"
-    printf "$supervisorLogString"
     userInput=""
-
     # Increment the minutes and advise how long it has been running
     ((minutes=minutes+1))
-    if [ $(($minutes / 60)) -gt 0 ] 
-    then
-        printf "It's been $(($minutes / 60)) Hours: "
-        if [ "$stretch" = 0 ]
-        then 
-            printf " [S]tretch; "
-        fi
-        if [ "$water" = 0 ]
-        then 
-            printf " Drink [W]ater; "
-        fi
-        printf "\n"
-    fi
-
-    # Check if its been 60 minutes of running
-    if [ $(($minutes % 60)) == 0 ] && [ $(($minutes / 60)) -gt 1 ]
-    then
-        echo -ne '\007'
-        supervisorLogString="${supervisorLogString} You completed $((($minutes / 60) - 1)) Hours: \t[${ticks[$water]}]Water \t[${ticks[$stretch]}]Stretch \n"
-        # Store the previous hour into file and add to string 
-        if [ "$stretch" = 1 ]
-        then 
-            ((stretchTotal++))
-        fi
-        if [ "$water" = 1 ]
-        then 
-            ((waterTotal++))
-        fi
-        # Reset the tasks at hand!
-        stretch=0   
-        water=0
-    fi
-
-    # Minute logging
-    printf "You have been working for a total of $minutes Minutes.\n"
-    # Check if its been 15 minutes of running
-    if [ $(($minutes % 15)) == 0 ] && [ $(($minutes)) -gt 60]
+    
+    
+    #end program
+    if [ $minutes ==  225 ]
     then 
-        echo -ne '\007'
-        printf "Fix your posture and check you breathing!"
+        printf "
+It's been ${minutes} minutes. Great job, take at least an hour break. See you again tomorrow. \n"
+running=false
     fi
 
-    # Alert if we are still fucking around with 15 minutes remaining
-    # if [ $(($minutes % 60)) == 45 ] 
-    # then 
-    #     if [ $water == 0 ] || [ $stretch == 0 ]
-    #     then 
-    #         echo -ne '\007'
-    #         echo -ne '\007'
-    #         echo -ne '\007'
-    #         printf "Only 15 minutes left to get stuff done!"
-    #         printf "The more you do it the easier it gets!"
-    #     fi
-    # fi
 
-    # Listen for userinput 
-    read -t 60 -n 1 userInput
-    if [ ! -z $userInput ]
-    then
-        ((minutes=minutes-1))
-        # tell supervisor we drank water stretched or worked our brain
-        if [ $userInput == 'w' ] 
-        then 
-            water=1
-        elif [ $userInput == 's' ] 
-        then 
-            stretch=1
-        fi
-
-        # BLOCKING RESPONSES
-        # Pause the supervisor when clicking p
-        if [ $userInput == 'p' ] 
-        then 
-            pauseSupervisor
-        fi
-        # End the supervisor when clicking f 
-        if [ $userInput == 'f' ] 
-        then 
-            if [ "$stretch" = 1 ]
-            then 
-                ((stretchTotal++))
-            fi
-            if [ "$water" = 1 ]
-            then 
-                ((waterTotal++))
-            fi
-            endSupervisor
-        fi
+    # Check the minutes see if they are 15 or 30
+    if [ $(($minutes % 60)) ==  15 ] || [ $(($minutes % 60)) == 30 ]
+    then 
+        # echo -ne '\007'
+        printf "
+It's been ${minutes} minutes. Fix your posture and check you breathing!"
     fi
+    if [ $(($minutes % 60)) ==  45 ]
+    then 
+        printf "
+It's been ${minutes} minutes. Time for a break! Get some Water and Stretch \n"
+    fi
+    if [ $(($minutes % 60)) ==  0 ] && [ $minutes != 0 ]
+    then 
+        printf "
+Break time is over whats our next task: 
+"
+        read task
+    fi
+    if [ $(($minutes % 60)) ==  1 ]
+    then 
+        printf "
+Lets do it!"
+    fi
+    read -t 1
 done
